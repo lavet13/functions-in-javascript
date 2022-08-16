@@ -5,7 +5,7 @@
 
 // we cannot use arrow function by using call or apply methods, it simply assign the "this" keyword to the window object
 const book = function (flightNum, name) {
-  console.log(this); // window object, because of outer lexical scope of this arrow function
+  console.log(this); // initially the "this" keyword is undefined(in strict mode)
 
   console.log(
     `${name} booked a seat on ${this.airline} flight ${this.iataCode}${flightNum}`
@@ -22,6 +22,7 @@ const lufthansa = {
 
 book.call(lufthansa, 239, 'Ivan Skinder');
 book.call(lufthansa, 635, 'Pavel Skinder');
+// const book = lufthansa.book; // function value
 
 const eurowings = {
   airline: 'Eurowings',
@@ -29,12 +30,11 @@ const eurowings = {
   bookings: [],
 };
 
-// const book = lufthansa.book; // function value
-
-// Does not work with the this keyword properly
+// Does not work with the "this" properly, so we might to set the "this" keyword manually by using bind method to the function itself
 // book(23, 'Sarah Williams');
 
 // Call Method
+// this method calls the function with a given "this" value and arguments provided individually;
 book.call(eurowings, 23, 'Sarah Williams'); // function is really just an object and objects have methods, therefore functions can have methods too, and the "call" method is one of them, the first argument is exactly what we want the this keyword to point to.
 book.call(lufthansa, 228, 'Mary Cooper');
 
@@ -50,6 +50,7 @@ const swiss = {
 book.call(swiss, 583, 'Mary Cooper');
 
 // Apply Method
+// this method calls the specified function with a given "this" value and arguments provided as an array;
 const flightData = [583, 'George Cooper'];
 book.apply(swiss, flightData); // this apply method is not that used anymore in modern JavaScript
 
@@ -58,6 +59,66 @@ book.call(swiss, ...flightData);
 console.log(swiss);
 
 // so in summary: we now have yet another tool in our toolbox here, and this one is one that allows us to explicitly define the this keyword in any function that we want, but there is actually yet another method which allows us to do the same thing and that's the bind method, it's more important than the call and apply methods;
+
+//////////////////////////////////////////////////////////////
+// Bind Method
+// bind allows us to set manually the this keyword for any function call, but it doesn't immediately call the function, instead it returns a new function where the this keyword is bound;
+// book.call(eurowings, 23, "Sarah Williams");
+
+const bookEW = book.bind(eurowings); // it won't call the book function, instead it will return a new function, where the "this" keyword will always be set to Eurowings in this case
+const bookLH = book.bind(lufthansa); // similar, but with the "this" keyword would be lufthansa
+const bookLX = book.bind(swiss); // similar, but with the "this" keyword would be swiss
+
+bookEW(23, 'Steven Williams');
+
+// this bookEW23 function now only needs the name, because the number was already preset here in the bind method;
+const bookEW23 = book.bind(eurowings, 23); // so this allows us to set in stone, certain arguments and so this function, the resulting function, then becomes even simpler, so all we have(need) to pass in is the passenger name, and then everything else basically happens automatically; and by the way what we did here, so basically specifying parts of the argument beforehand is actually a common pattern called partial application, so essentially, partial application means that a part of the arguments of the original function are already applied, so which means, already set, and so that's exactly what the bookEW23 function is, it's essentially the book function but with 23 already predefined and the "this" keyword with the value of eurowings;
+
+bookEW23('Jonas Schmedtmann');
+bookEW23('Martha Cooper');
+
+// With Event Listener
+lufthansa.planes = 300;
+lufthansa.buyPlane = function () {
+  console.log(this); // initially it points to lufthansa because the object(lufthansa) is calling the method(buyPlane)
+
+  this.planes++;
+  console.log(this.planes);
+};
+
+// document.querySelector('.buy').addEventListener('click', lufthansa.buyPlane); // we learned that in an event handler function, the "this" keyword always points to the element on which that handler is attached to, but right now it's not our purpose;
+
+document
+  .querySelector('.buy')
+  .addEventListener('click', lufthansa.buyPlane.bind(lufthansa)); // SOLVE so what we really want to is to manually define the "this" keyword, so we need to pass in a function and not to call it, and so we already know that the "call" method calls the function and so that's not what we need, and so therefore we use bind because we know that the bind is gonna return a new function with the "this" predefined value which is gonna be lufthansa object because we specified that lulw, arguments are optional;
+
+// Partial Application(which means is that we can preset parameters)
+// many times we are not even interested in the "this" keyword, but we still use the bind method just to predefine the arguments;
+
+const addTax = (rate, value) => value + value * rate;
+
+console.log(addTax(0.1, 100)); // 10%, result is 110
+
+const addVAT = addTax.bind(null, 0.23); // the "this" keyword set to null and rate(in case order of our arguments) is set to 0.23;
+// const addTax = value => value + value * 0.23; // similar as above
+
+console.log(addVAT(200)); // need to keep in mind that order of the arguments then is important, when we are using the bind method onto addTax
+console.log(addVAT(23));
+
+// Challenge
+const addVATRate =
+  (rate = 0.23) =>
+  value =>
+    value + value * rate;
+
+const addVAT2 = addVATRate(); // default value of rate is 0.23
+console.log(addVAT2(200)); // 246
+console.log(addVAT2(23)); // 28.29
+
+// const addTaxRate = rate => value => value + value * rate;
+
+// const addTAXValue = addTaxRate(0.1);
+// console.log(addTAXValue(100)); // 110
 
 /*
 //////////////////////////////////////////////////////////////
@@ -85,8 +146,9 @@ greetArr('Hi')('Ivan');
 // Functions Accepting Callback Functions
 // own example
 const addElementToTheEnd = function (array, element) {
-  return array.push(element);
+  return array.push(element); // new length of the array
 };
+
 const deleteLastElement = function (array) {
   return array.pop(); // deleted element
 };
