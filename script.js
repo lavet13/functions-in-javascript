@@ -1,21 +1,27 @@
 'use strict';
+
 //////////////////////////////////////////////////////////////
 // The call and apply Methods
+
+// we cannot use arrow function by using call or apply methods, it simply assign the "this" keyword to the window object
+const book = function (flightNum, name) {
+  console.log(this); // window object, because of outer lexical scope of this arrow function
+
+  console.log(
+    `${name} booked a seat on ${this.airline} flight ${this.iataCode}${flightNum}`
+  );
+  this.bookings.push({ flight: `${this.iataCode}${flightNum}`, name }); // enhancement btw "name" - is gonna be the same exact name of the property as the variable name
+};
+
 const lufthansa = {
   airline: 'Lufthansa',
   iataCode: 'LH',
   bookings: [],
   // book: function () {},
-  book(flightNum, name) {
-    console.log(
-      `${name} booked a seat on ${this.airline} flight ${this.iataCode}${flightNum}`
-    );
-    this.bookings.push({ flight: `${this.iataCode}${flightNum}`, name }); // enhancement btw "name" - is gonna be the same exact name of the property as the variable name
-  },
 };
 
-lufthansa.book(239, 'Ivan Skinder');
-lufthansa.book(635, 'Pavel Skinder');
+book.call(lufthansa, 239, 'Ivan Skinder');
+book.call(lufthansa, 635, 'Pavel Skinder');
 
 const eurowings = {
   airline: 'Eurowings',
@@ -23,7 +29,7 @@ const eurowings = {
   bookings: [],
 };
 
-const book = lufthansa.book; // function value
+// const book = lufthansa.book; // function value
 
 // Does not work with the this keyword properly
 // book(23, 'Sarah Williams');
