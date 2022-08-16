@@ -1,6 +1,82 @@
 'use strict';
+//////////////////////////////////////////////////////////////
+// The call and apply Methods
+const lufthansa = {
+  airline: 'Lufthansa',
+  iataCode: 'LH',
+  bookings: [],
+  // book: function () {},
+  book(flightNum, name) {
+    console.log(
+      `${name} booked a seat on ${this.airline} flight ${this.iataCode}${flightNum}`
+    );
+    this.bookings.push({ flight: `${this.iataCode}${flightNum}`, name }); // enhancement btw "name" - is gonna be the same exact name of the property as the variable name
+  },
+};
+
+lufthansa.book(239, 'Ivan Skinder');
+lufthansa.book(635, 'Pavel Skinder');
+
+const eurowings = {
+  airline: 'Eurowings',
+  iataCode: 'EW',
+  bookings: [],
+};
+
+const book = lufthansa.book; // function value
+
+// Does not work with the this keyword properly
+// book(23, 'Sarah Williams');
+
+// Call Method
+book.call(eurowings, 23, 'Sarah Williams'); // function is really just an object and objects have methods, therefore functions can have methods too, and the "call" method is one of them, the first argument is exactly what we want the this keyword to point to.
+book.call(lufthansa, 228, 'Mary Cooper');
+
+console.log(lufthansa);
+console.log(eurowings);
+
+const swiss = {
+  airline: 'Swiss Air Lines',
+  iataCode: 'LX',
+  bookings: [],
+};
+
+book.call(swiss, 583, 'Mary Cooper');
+
+// Apply Method
+const flightData = [583, 'George Cooper'];
+book.apply(swiss, flightData); // this apply method is not that used anymore in modern JavaScript
+
+// we can do the exact same thing, so jonas prefer to use call method and then spread operator out the arguments from an array like this
+book.call(swiss, ...flightData);
+console.log(swiss);
+
+// so in summary: we now have yet another tool in our toolbox here, and this one is one that allows us to explicitly define the this keyword in any function that we want, but there is actually yet another method which allows us to do the same thing and that's the bind method, it's more important than the call and apply methods;
 
 /*
+//////////////////////////////////////////////////////////////
+// Functions Returning Functions
+const greet = function (greeting) {
+  return function (name) {
+    console.log(`${greeting} ${name}`);
+  };
+};
+
+const greeterHey = greet('Hey');
+greeterHey('Ivan');
+
+// and of course we could do it all in one go
+greet('Hello')('Ivan');
+
+// arrow function syntax, similar as above
+const greetArr = greeting => name => console.log(`${greeting} ${name}`);
+
+greetArr('Hi')('Ivan');
+*/
+
+/*
+//////////////////////////////////////////////////////////////
+// Functions Accepting Callback Functions
 // own example
 const addElementToTheEnd = function (array, element) {
   return array.push(element);
@@ -91,7 +167,7 @@ const newPassport = function (person) {
 };
 
 newPassport(jonas);
-checkIn(flight, jonas); // we are passing a reference to the function, but not by reference - that's an important distinction :-D
+checkIn(flight, jonas); // we are passing a reference to the function, but not by reference(example C++) - that's an important distinction :-D, 
 console.log({ flight, jonas });
 */
 
@@ -124,6 +200,6 @@ createBooking('LH123', 2, 800);
 createBooking('LH123', 10);
 createBooking('LH123', 20);
 
-// I CANNOT DO THIS ಥ_ಥ
+// ಥ_ಥ
 createBooking('LH123', undefined, 228); // setting undefined is the same thing as not even setting it, so this is how we basically skip a default parameter that we want to leave at its default
 */
