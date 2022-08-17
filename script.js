@@ -1,5 +1,6 @@
 'use strict';
 
+/*
 //////////////////////////////////////////////////////////////
 // The call and apply Methods
 
@@ -115,10 +116,12 @@ const addVAT2 = addVATRate(); // default value of rate is 0.23
 console.log(addVAT2(200)); // 246
 console.log(addVAT2(23)); // 28.29
 
+// SOLVE is the same as above, but this is obviosly unnecessary
 // const addTaxRate = rate => value => value + value * rate;
 
 // const addTAXValue = addTaxRate(0.1);
 // console.log(addTAXValue(100)); // 110
+*/
 
 /*
 //////////////////////////////////////////////////////////////
