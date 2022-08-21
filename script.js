@@ -124,7 +124,7 @@ const book = function (flightNum, name) {
   console.log(
     `${name} booked a seat on ${this.airline} flight ${this.iataCode}${flightNum}`
   );
-  this.bookings.push({ flight: `${this.iataCode}${flightNum}`, name }); // enhancement btw "name" - is gonna be the same exact name of the property as the variable name
+  this.bookings.push({ flight: `${this.iataCode}${flightNum}`, name }); // SOLVE enhancement btw "name" - property is gonna be the same exact name as the variable name
 };
 
 const lufthansa = {
@@ -176,7 +176,7 @@ console.log(swiss);
 
 //////////////////////////////////////////////////////////////
 // Bind Method
-// bind allows us to set manually the this keyword for any function call, but it doesn't immediately call the function, instead it returns a new function where the this keyword is bound;
+// bind allows us to set manually the this keyword for any function call, but it doesn't immediately call the function, instead it returns a new function where the this keyword is bound(привязано);
 // book.call(eurowings, 23, "Sarah Williams");
 
 const bookEW = book.bind(eurowings); // it won't call the book function, instead it will return a new function, where the "this" keyword will always be set to Eurowings in this case
@@ -239,11 +239,29 @@ console.log(addVAT2(23)); // 28.29
 /*
 //////////////////////////////////////////////////////////////
 // Functions Returning Functions
+
+// some tests about closures
+const textFunc = (a) => {
+    let sum = 0;
+    return function (b) {
+        sum += a + b;
+        return sum;
+    }; 
+};
+
+const x = textFunc(2);
+x(2); // 4
+x(2); // 8
+x(4); // 14
+x(6); // 22
+
+
 const greet = function (greeting) {
   return function (name) {
     console.log(`${greeting} ${name}`);
   };
 };
+
 
 const greeterHey = greet('Hey');
 greeterHey('Ivan');
@@ -365,7 +383,7 @@ const createBooking = function (
   numPassengers = 1,
   price = 199 * numPassengers
 ) {
-  // ES5
+  // ES5(not exactly as these, because there weren't shorthand since ES6, it's like newest features, not sure about that)
   // numPassengers ||= 1; // catch 0, "", null, undefined etc., so it goes to the second operand to assign a default value
   // price ||= 199;
 
