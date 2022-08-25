@@ -176,7 +176,7 @@ console.log(swiss);
 
 //////////////////////////////////////////////////////////////
 // Bind Method
-// bind allows us to set manually the this keyword for any function call, but it doesn't immediately call the function, instead it returns a new function where the this keyword is bound(привязано);
+// bind allows us to set manually the "this" keyword for any function call, but it doesn't immediately call the function, instead it returns a new function where the this keyword is bound(привязано);
 // book.call(eurowings, 23, "Sarah Williams");
 
 const bookEW = book.bind(eurowings); // it won't call the book function, instead it will return a new function, where the "this" keyword will always be set to Eurowings in this case
