@@ -116,7 +116,7 @@ console.log(notPrivate);
 //////////////////////////////////////////////////////////////
 // The call and apply Methods
 
-// SOLVE we cannot use arrow function by using call, apply methods, it simply assign the "this" keyword to the window object, it's like override it
+// SOLVE we cannot use arrow function by using call, apply and bind methods, it simply assign the "this" keyword to the window object, it's like override it
 
 const book = function (flightNum, name) {
   console.log(this); // initially the "this" keyword is undefined(in strict mode)
